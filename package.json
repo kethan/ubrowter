@@ -1,7 +1,7 @@
 {
 	"name": "ubrowter",
 	"description": "Fast, unopinionated, minimalist client router",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"source": "./src/index.ts",
 	"main": "./dist/ubrowter.umd.js",
 	"module": "./dist/ubrowter.es.js",
@@ -26,7 +26,9 @@
 	"directories": {
 		"example": "example"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"qss": "^2.0.3"
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/kethan/ubrowter.git"

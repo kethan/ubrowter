@@ -26,7 +26,7 @@ export default class Router<T extends Req = Req> {
                 req.params = x.params;
                 req.path = x.url;
                 req.routePath = path;
-                req.query = decode(x.url.split("?")[1] || "");
+                req.query = decode(x.url.split("?")[1] || "") as any;
                 let run = (rReq: T, rRes: Res) => {
                     try {
                         let middleware = fns.shift();

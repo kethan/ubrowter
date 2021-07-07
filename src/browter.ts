@@ -21,7 +21,7 @@ export default class Browter<T extends Req = Req> extends Router<T> {
             this.redirect(y);
     }
 
-    redirect(path, query = {}, replace: boolean = false) {
+    redirect(path, query = {}, replace: boolean = false): void {
         let req = { url: path, method: 'GET' } as T;
         path = path + (Object.keys(query).length !== 0 ? encode(query, '?') : '');
         let send = (body) => this.listener.onMatch(req, body);
@@ -34,12 +34,12 @@ export default class Browter<T extends Req = Req> extends Router<T> {
         this.redirect(location.pathname + location.search);
     }
 
-    unlisten() {
+    unlisten(): void {
         removeEventListener("popstate", this.route.bind(this));
         removeEventListener("click", this.click);
     }
 
-    listen(listener = this.listener) {
+    listen(listener = this.listener): void {
         this.listener = listener;
         addEventListener("popstate", this.route.bind(this));
         addEventListener("click", this.click);

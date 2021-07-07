@@ -26,5 +26,5 @@ declare class Browter<T extends Req = Req> extends Router<T> {
     constructor();
     listen({ onError, onMatch, onNoMatch }?: { onError?: ErrorHandler<T>, onMatch?: MatchMiddleware<T>, onNoMatch?: NoMatchMiddleware<T> }): void;
     unlisten(): void;
-    redirect(path: string, query?: any, replace?: boolean);
+    redirect(path: string, query?: any, replace?: boolean): void;
 }
