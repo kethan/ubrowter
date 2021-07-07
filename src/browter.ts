@@ -35,8 +35,6 @@ export default class Browter<T extends Req = Req> extends Router<T> {
     }
 
     unlisten() {
-        this.routes = [];
-        this.handlers = [];
         removeEventListener("popstate", this.route.bind(this));
         removeEventListener("click", this.click);
     }

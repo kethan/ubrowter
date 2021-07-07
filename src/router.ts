@@ -2,8 +2,8 @@ import { Req, Middleware, Res, ErrorHandler, MatchMiddleware, NoMatchMiddleware 
 import { decode, pathToRegex } from "./utils";
 
 export default class Router<T extends Req = Req> {
-    protected routes: { path: string, method: string, handlers: Middleware<T>[] }[] = [];
-    protected handlers: Middleware<T>[] = [];
+    private routes: { path: string, method: string, handlers: Middleware<T>[] }[] = [];
+    private handlers: Middleware<T>[] = [];
     constructor() { }
 
     use(...handlers: Middleware<T>[]): this {
