@@ -21,13 +21,25 @@ export default class Browter<T extends Req = Req> extends Router<T> {
             this.redirect(y);
     }
 
-    redirect(path, query = {}, replace: boolean = false): void {
+    redirect(path: string, query = {}, replace: boolean = false): void {
         let req = { url: path, method: 'GET' } as T;
         path = path + (Object.keys(query).length !== 0 ? encode(query, '?') : '');
-        let send = (body) => this.listener.onMatch(req, body);
-        if (path == location.pathname + location.search) history.replaceState(path, "", path)
-        else replace ? history.replaceState(path, "", path) : history.pushState(path, "", path);
-        this.handler({ req: req, res: { redirect: this.redirect.bind(this), send: send.bind(this) }, ...this.listener });
+        let m = {
+            onMatch: (req: T, body: any) => {
+                if (path == location.pathname + location.search) history.replaceState(path, "", path)
+                else replace ? history.replaceState(path, "", path) : history.pushState(path, "", path);
+                this.listener.onMatch(req, body);
+            }
+        }
+        let send = (body: any) => m.onMatch(req, body);
+        this.handler({
+            req: req, res: { redirect: this.redirect.bind(this), send: send.bind(this) }, onError: (err, req, res) => {
+                this.listener.onError(err, req, res);
+            }, onMatch: m.onMatch, onNoMatch: (req, res) => {
+                this.listener.onNoMatch(req, res);
+            }
+        });
+
     }
 
     private route() {

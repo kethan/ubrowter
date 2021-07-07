@@ -1,5 +1,5 @@
 import { Browter } from "../src";
-import { Req } from "../";
+import { Req } from "..";
 
 interface CustomRequest extends Req {
     date: Date;
@@ -9,7 +9,7 @@ let a = new Browter<CustomRequest>();
 
 let result = {
     onMatch: (req, body) => console.log(body, req),
-    onError: (error, req, res) => console.log(error),
+    onError: (error, req, res) => console.log('error', error),
     onNoMatch: (req, res) => console.log("404", req)
 };
 
@@ -26,7 +26,7 @@ a
     .listen(result);
 
 setTimeout(() => {
-    // a.redirect("/about", {q: 99});
+    // a.redirect("/posts", {q: 99}, false);
     // a.unlisten();
 }, 3000);
 

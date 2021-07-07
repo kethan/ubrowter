@@ -1,8 +1,8 @@
 import Router from "./src/router";
 
-export interface Req<P extends string = string> {
+export interface Req {
     method: string;
-    params?: Record<P, any>;
+    params?: Record<string, any>;
     query?: Record<string, string>;
     path?: string;
     routePath?: string;
@@ -10,16 +10,16 @@ export interface Req<P extends string = string> {
 }
 
 export interface Res {
-    redirect(path: string, query?: any, redirect?: boolean): void;
+    redirect(path: string, query?: any, replace?: boolean): void;
     send(body: any): void;
 }
 
 export type Promisable<T> = Promise<T> | T;
 export type NextHandler = (err?: string | Error) => Promisable<void>;
-export type ErrorHandler<T extends Req, P = any> = (err: string | Error | null, req: T, res: Res) => Promisable<void>;
-export type Middleware<T extends Req<P>, P extends string = any> = (req: T & Req, res: Res, next: NextHandler) => Promisable<void>;
-export type NoMatchMiddleware<T extends Req, P = any> = (req: T & Req, res: Res) => Promisable<void>;
-export type MatchMiddleware<T extends Req, P = any> = (req: T & Req, body: string | any) => Promisable<void>;
+export type ErrorHandler<T extends Req> = (err: string | Error | null, req: T, res: Res) => Promisable<void>;
+export type Middleware<T extends Req> = (req: T & Req, res: Res, next: NextHandler) => Promisable<void>;
+export type NoMatchMiddleware<T extends Req> = (req: T & Req, res: Res) => Promisable<void>;
+export type MatchMiddleware<T extends Req> = (req: T & Req, body: string | any) => Promisable<void>;
 export type Pattern = RegExp | string;
 
 declare class Browter<T extends Req = Req> extends Router<T> {
