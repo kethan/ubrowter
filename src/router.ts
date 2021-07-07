@@ -1,4 +1,4 @@
-import { Req, Middleware, Res, ErrorHandler, MatchMiddleware, NoMatchMiddleware } from "../index";
+import { Req, Middleware, Res, ErrorHandler, NoMatchMiddleware } from "../index";
 import { decode, pathToRegex } from "./utils";
 
 export default class Router<T extends Req = Req> {
@@ -16,7 +16,7 @@ export default class Router<T extends Req = Req> {
         return this;
     }
 
-    protected handler({ req, res, onError, onMatch, onNoMatch }: { req: T, res: Res, onError: ErrorHandler<T>, onMatch: MatchMiddleware<T>, onNoMatch: NoMatchMiddleware<T> }) {
+    protected handler({ req, res, onError, onNoMatch }: { req: T, res: Res, onError: ErrorHandler<T>, onNoMatch: NoMatchMiddleware<T> }) {
         let found = false;
         for (const { path, handlers } of (this.routes).filter(r => r.method.toLowerCase() == req.method.toLowerCase())) {
             let x = pathToRegex(path, req.url);
@@ -33,6 +33,7 @@ export default class Router<T extends Req = Req> {
                         middleware
                             ? middleware(rReq, rRes, (err: any) => err ? onError(err, rReq, rRes) : run(rReq, rRes))
                             : onError(null, rReq, rRes);
+
                     } catch (error) {
                         onError(error, rReq, rRes);
                     }

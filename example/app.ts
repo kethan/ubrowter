@@ -8,8 +8,7 @@ interface CustomRequest extends Req {
 let a = new Browter<CustomRequest>();
 
 let result = {
-    onMatch: (req, body) => console.log(body, req),
-    onError: (error, req, res) => console.log('error', error),
+    onError: (error, req, res) => console.log('error', error, req, res),
     onNoMatch: (req, res) => console.log("404", req)
 };
 
@@ -18,9 +17,9 @@ a
         req.date = new Date();
         next();
     })
-    .get("/", (req, res) => res.send("home"))
-    .get("/posts", (req, res) => res.send("posts"))
-    .get("/posts/:id", (req, res) => res.send(`posts ${req.params}`))
+    .get("/", (req, res, next) => console.log("home"))
+    .get("/posts", (req, res) => console.log("posts"))
+    .get("/posts/:id", (req, res) => console.log(`posts ${req.params?.id}`))
     .get("/error", (req, res) => { throw "error" })
     .get("/redirect", (req, res) => res.redirect("/", {}, true))
     .listen(result);

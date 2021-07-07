@@ -7,6 +7,7 @@ export interface Req {
     path?: string;
     routePath?: string;
     url: string;
+    body: any;
 }
 
 export interface Res {
@@ -19,12 +20,11 @@ export type NextHandler = (err?: string | Error) => Promisable<void>;
 export type ErrorHandler<T extends Req> = (err: string | Error | null, req: T, res: Res) => Promisable<void>;
 export type Middleware<T extends Req> = (req: T & Req, res: Res, next: NextHandler) => Promisable<void>;
 export type NoMatchMiddleware<T extends Req> = (req: T & Req, res: Res) => Promisable<void>;
-export type MatchMiddleware<T extends Req> = (req: T & Req, body: string | any) => Promisable<void>;
 export type Pattern = RegExp | string;
 
 declare class Browter<T extends Req = Req> extends Router<T> {
     constructor();
-    listen({ onError, onMatch, onNoMatch }?: { onError?: ErrorHandler<T>, onMatch?: MatchMiddleware<T>, onNoMatch?: NoMatchMiddleware<T> }): void;
+    listen({ onError, onNoMatch }?: { onError?: ErrorHandler<T>, onNoMatch?: NoMatchMiddleware<T> }): void;
     unlisten(): void;
     redirect(path: string, query?: any, replace?: boolean): void;
 }

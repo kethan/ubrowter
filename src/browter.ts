@@ -1,12 +1,12 @@
-import { Req, ErrorHandler, MatchMiddleware, NoMatchMiddleware } from "../index";
+import { Req, ErrorHandler, NoMatchMiddleware } from "../index";
 import Router from "./router";
 import { encode } from "./utils";
 
 export default class Browter<T extends Req = Req> extends Router<T> {
 
     private listener = {
-        onError: () => { }, onMatch: () => { }, onNoMatch: () => { }
-    } as { onError: ErrorHandler<T>, onMatch: MatchMiddleware<T>, onNoMatch: NoMatchMiddleware<T> }
+        onError: () => { }, onNoMatch: () => { }
+    } as { onError: ErrorHandler<T>, onNoMatch: NoMatchMiddleware<T> }
 
     constructor() {
         super();
@@ -22,24 +22,18 @@ export default class Browter<T extends Req = Req> extends Router<T> {
     }
 
     redirect(path: string, query = {}, replace: boolean = false): void {
-        let req = { url: path, method: 'GET' } as T;
+        let req = { url: path, method: 'GET', body: null } as T;
         path = path + (Object.keys(query).length !== 0 ? encode(query, '?') : '');
-        let m = {
-            onMatch: (req: T, body: any) => {
-                if (path == location.pathname + location.search) history.replaceState(path, "", path)
-                else replace ? history.replaceState(path, "", path) : history.pushState(path, "", path);
-                this.listener.onMatch(req, body);
-            }
-        }
-        let send = (body: any) => m.onMatch(req, body);
+        if (path == location.pathname + location.search) history.replaceState(path, "", path)
+        else replace ? history.replaceState(path, "", path) : history.pushState(path, "", path);
+        let send = (body: any) => req.body = body;
         this.handler({
             req: req, res: { redirect: this.redirect.bind(this), send: send.bind(this) }, onError: (err, req, res) => {
                 this.listener.onError(err, req, res);
-            }, onMatch: m.onMatch, onNoMatch: (req, res) => {
+            }, onNoMatch: (req, res) => {
                 this.listener.onNoMatch(req, res);
             }
         });
-
     }
 
     private route() {
